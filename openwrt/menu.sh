@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #################################################
-# 描述: Debian/Ubuntu/Armbian 官方sing-box 全自动脚本
+# 描述: OpenWRT 官方sing-box 全自动脚本
 # 版本: 1.7.1
 # 作者: Youtube: 七尺宇
 #################################################
@@ -18,17 +18,17 @@ SCRIPT_DIR="/etc/sing-box/scripts"
 INITIALIZED_FILE="$SCRIPT_DIR/.initialized"
 
 # 确保脚本目录存在并设置权限
-sudo mkdir -p "$SCRIPT_DIR"
-sudo chown "$(whoami)":"$(whoami)" "$SCRIPT_DIR"
+mkdir -p "$SCRIPT_DIR"
+if ! grep -qi 'openwrt' /etc/os-release; then
+    chown "$(whoami)":"$(whoami)" "$SCRIPT_DIR"
+fi
 
 # 脚本的URL基础路径
-BASE_URL="https://ghfast.top/https://raw.githubusercontent.com/qichiyuhub/sbshell/refs/heads/master/debian"
+BASE_URL="https://ghfast.top/https://raw.githubusercontent.com/qichiyuhub/sbshell/refs/heads/master/openwrt"
 
 # 脚本列表
 SCRIPTS=(
     "check_environment.sh"     # 检查系统环境
-    "set_network.sh"           # 配置网络设置
-    "check_update.sh"          # 检查可用更新
     "install_singbox.sh"       # 安装 Sing-box
     "manual_input.sh"          # 手动输入配置
     "manual_update.sh"         # 手动更新配置
@@ -55,7 +55,7 @@ download_script() {
     local RETRY_DELAY=5
 
     for ((i=1; i<=RETRIES; i++)); do
-        if wget -q -O "$SCRIPT_DIR/$SCRIPT" "$BASE_URL/$SCRIPT"; then
+        if curl -s -o "$SCRIPT_DIR/$SCRIPT" "$BASE_URL/$SCRIPT"; then
             chmod +x "$SCRIPT_DIR/$SCRIPT"
             return 0
         else
@@ -123,12 +123,17 @@ initialize() {
 
 # 自动引导设置
 auto_setup() {
-    systemctl is-active --quiet sing-box && sudo systemctl stop sing-box
+    if [ -f /etc/init.d/sing-box ]; then
+        /etc/init.d/sing-box stop
+    fi
+    mkdir -p /etc/sing-box/
+    [ -f /etc/sing-box/mode.conf ] || touch /etc/sing-box/mode.conf
+    chmod 777 /etc/sing-box/mode.conf
     bash "$SCRIPT_DIR/check_environment.sh"
     command -v sing-box &> /dev/null || bash "$SCRIPT_DIR/install_singbox.sh" || bash "$SCRIPT_DIR/check_update.sh"
     bash "$SCRIPT_DIR/switch_mode.sh"
     bash "$SCRIPT_DIR/manual_input.sh"
-    bash "$SCRIPT_DIR/start_singbox.sh"
+    bash "$SCRIPT_DIR/start_singbox.sh"  
 }
 
 # 检查是否需要初始化
@@ -142,15 +147,16 @@ if [ ! -f "$INITIALIZED_FILE" ]; then
     fi
 fi
 
-# 添加别名到 .bashrc，如果已存在则不再添加
-if ! grep -q "alias sb=" ~/.bashrc; then
+# 添加别名
+[ -f ~/.bashrc ] || touch ~/.bashrc
+if ! grep -q "alias sb=" ~/.bashrc || true; then
     echo "alias sb='bash $SCRIPT_DIR/menu.sh menu'" >> ~/.bashrc
 fi
 
 # 创建快捷脚本
-if [ ! -f /usr/local/bin/sb ]; then
-    echo -e '#!/bin/bash\nbash /etc/sing-box/scripts/menu.sh menu' | sudo tee /usr/local/bin/sb >/dev/null
-    sudo chmod +x /usr/local/bin/sb
+if [ ! -f /usr/bin/sb ]; then
+    echo -e '#!/bin/bash\nbash /etc/sing-box/scripts/menu.sh menu' | tee /usr/bin/sb >/dev/null
+    chmod +x /usr/bin/sb
 fi
 
 # 菜单显示
@@ -161,13 +167,11 @@ show_menu() {
     echo -e "${GREEN}3. 自动更新配置文件${NC}"
     echo -e "${GREEN}4. 手动启动 sing-box${NC}"
     echo -e "${GREEN}5. 手动停止 sing-box${NC}"
-    echo -e "${GREEN}6. 安装/更新 sing-box${NC}"
-    echo -e "${GREEN}7. 默认参数设置${NC}"
-    echo -e "${GREEN}8. 设置自启动${NC}"
-    echo -e "${GREEN}9. 网络设置(只支持debian)${NC}"
-    echo -e "${GREEN}10. 常用命令${NC}"
-    echo -e "${GREEN}11. 更新脚本${NC}"
-    echo -e "${GREEN}12. 更新控制面板${NC}"
+    echo -e "${GREEN}6. 默认参数设置${NC}"
+    echo -e "${GREEN}7. 设置自启动${NC}"
+    echo -e "${GREEN}8. 常用命令${NC}"
+    echo -e "${GREEN}9. 更新脚本${NC}"
+    echo -e "${GREEN}10. 更新控制面板${NC}"
     echo -e "${GREEN}0. 退出${NC}"
     echo -e "${CYAN}=======================================${NC}"
 }
@@ -194,28 +198,18 @@ handle_choice() {
             bash "$SCRIPT_DIR/stop_singbox.sh"
             ;;
         6)
-            if command -v sing-box &> /dev/null; then
-                bash "$SCRIPT_DIR/check_update.sh"
-            else
-                bash "$SCRIPT_DIR/install_singbox.sh"
-            fi
-            ;;
-        7)
             bash "$SCRIPT_DIR/set_defaults.sh"
             ;;
-        8)
+        7)
             bash "$SCRIPT_DIR/manage_autostart.sh"
             ;;
-        9)
-            bash "$SCRIPT_DIR/set_network.sh"
-            ;;
-        10)
+        8)
             bash "$SCRIPT_DIR/commands.sh"
             ;;
-        11)
+        9)
             bash "$SCRIPT_DIR/update_scripts.sh"
             ;;
-        12)
+        10)
             bash "$SCRIPT_DIR/update_ui.sh"
             ;;
         0)

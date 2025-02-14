@@ -11,7 +11,7 @@ SCRIPT_DIR="/etc/sing-box/scripts"
 TEMP_DIR="/tmp/sing-box"
 
 # 脚本的URL基础路径
-BASE_URL="https://ghfast.top/https://raw.githubusercontent.com/qichiyuhub/sbshell/refs/heads/master/debian"
+BASE_URL="https://ghfast.top/https://raw.githubusercontent.com/qichiyuhub/sbshell/refs/heads/master/openwrt"
 
 # 初始下载菜单脚本的URL
 MENU_SCRIPT_URL="$BASE_URL/menu.sh"
@@ -20,10 +20,10 @@ MENU_SCRIPT_URL="$BASE_URL/menu.sh"
 echo -e "${CYAN}正在检测版本，请耐心等待...${NC}"
 
 # 确保脚本目录和临时目录存在并设置权限
-sudo mkdir -p "$SCRIPT_DIR"
-sudo mkdir -p "$TEMP_DIR"
-sudo chown "$(whoami)":"$(whoami)" "$SCRIPT_DIR"
-sudo chown "$(whoami)":"$(whoami)" "$TEMP_DIR"
+mkdir -p "$SCRIPT_DIR"
+mkdir -p "$TEMP_DIR"
+chown "$(id -u)":"$(id -g)" "$SCRIPT_DIR"
+chown "$(id -u)":"$(id -g)" "$TEMP_DIR"
 
 # 下载远程脚本到临时目录
 wget -q -O "$TEMP_DIR/menu.sh" "$MENU_SCRIPT_URL"
@@ -58,7 +58,7 @@ if [ -z "$REMOTE_VERSION" ]; then
 fi
 
 # 输出检测到的版本
-echo -e "${CYAN}检测到的版本：本地版本 $LOCAL_VERSION,远程版本 $REMOTE_VERSION${NC}"
+echo -e "${CYAN}检测到的版本：本地版本 $LOCAL_VERSION, 远程版本 $REMOTE_VERSION${NC}"
 
 # 比较版本号
 if [ "$LOCAL_VERSION" == "$REMOTE_VERSION" ]; then
@@ -78,8 +78,6 @@ fi
 # 脚本列表
 SCRIPTS=(
     "check_environment.sh"
-    "set_network.sh"
-    "check_update.sh"
     "install_singbox.sh"
     "manual_input.sh"
     "manual_update.sh"
@@ -143,8 +141,8 @@ function regular_update() {
 # 重置更新
 function reset_update() {
     echo -e "${RED}即将停止 sing-box 并重置所有内容，请稍候...${NC}"
-    sudo bash "$SCRIPT_DIR/clean_nft.sh"
-    sudo rm -rf /etc/sing-box
+    bash "$SCRIPT_DIR/clean_nft.sh"
+    rm -rf /etc/sing-box
     echo -e "${CYAN}sing-box 文件夹已删除。${NC}"
     echo -e "${CYAN}正在重新拉取脚本，请耐心等待...${NC}"
     bash <(curl -s "$MENU_SCRIPT_URL")
@@ -158,7 +156,7 @@ read -rp "请选择操作: " update_choice
 
 case $update_choice in
     1)
-        echo -e "${RED}常规更新只更新脚本内容,再次执行菜单内容才会执行新脚本。${NC}"
+        echo -e "${RED}常规更新只更新脚本内容, 再次执行菜单内容才会执行新脚本。${NC}"
         read -rp "是否继续常规更新？(y/n): " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
             regular_update
@@ -167,7 +165,7 @@ case $update_choice in
         fi
         ;;
     2)
-        echo -e "${RED}即将停止 sing-box 并重置所有内容,并初始化引导设置。${NC}"
+        echo -e "${RED}即将停止 sing-box 并重置所有内容, 并初始化引导设置。${NC}"
         read -rp "是否继续重置更新？(y/n): " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
             reset_update
