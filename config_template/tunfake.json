@@ -36,7 +36,6 @@
      {"clash_mode": "Direct", "server": "dns_direct"},
      {"clash_mode": "Global", "server": "dns_proxy"},
      {"rule_set": "geosite-cn", "server": "dns_direct"},
-     {"domain": ["www.msftconnecttest.com", "connectivitycheck.gstatic.com"], "server": "dns_direct"}，
      {"query_type": ["A", "AAAA"], "server": "fakeip"}
    ],
    "fakeip": {"enabled": true, "inet4_range": "198.18.0.0/16", "inet6_range": "fc00::/18"},
