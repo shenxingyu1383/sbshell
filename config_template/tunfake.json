@@ -25,9 +25,9 @@
  {
    "servers": 
    [
-    {"tag": "dns_direct", "address": ["223.5.5.5","114.114.114.114"] "detour": "🎯 全球直连"},
+    {"tag": "dns_direct", "address": "223.5.5.5", "detour": "🎯 全球直连"},
     {"tag": "dns_public", "address": "https://dns.alidns.com/dns-query", "address_resolver": "dns_direct", "detour": "🎯 全球直连"},
-    {"tag": "dns_proxy", "address": ["tls://1.1.1.1","tls://8.8.8.8"] "strategy": "prefer_ipv4", "detour": "🚀 节点选择"},
+    {"tag": "dns_proxy", "address": "tls://1.1.1.1", "strategy": "ipv4_only", "detour": "🚀 节点选择"},
     {"tag": "fakeip", "address": "fakeip"}
    ],
    "rules": 
@@ -37,12 +37,11 @@
      {"clash_mode": "Global", "server": "dns_proxy"},
 	 {"domain": ["www.msftconnecttest.com", "connectivitycheck.gstatic.com"], "server": "dns_direct"},
      {"rule_set": "geosite-cn", "server": "dns_direct"},
-     {"query_type": ["A", "AAAA"], "server": "fakeip","disable_cache": true},
-	 {"domin_suffix": [".cn"], "server": "dns_direct"}
+     {"query_type": ["A", "AAAA"], "server": "fakeip"}
    ],
-   "fakeip": {"enabled": true, "inet4_range": "198.18.0.0/16", "inet6_range": "fc00::/18","independent_mapping": true},
+   "fakeip": {"enabled": true, "inet4_range": "198.18.0.0/16", "inet6_range": "fc00::/18"},
    "final": "dns_proxy",
-   "strategy": "prefer_ipv4"
+   "strategy": "ipv4_only"
 },
 
 
