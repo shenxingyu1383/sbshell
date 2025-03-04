@@ -35,7 +35,7 @@
      {"outbound": "any", "server": "dns_public"},
      {"clash_mode": "Direct", "server": "dns_direct"},
      {"clash_mode": "Global", "server": "dns_proxy"},
-	 {"domain": ["www.msftconnecttest.com", "connectivitycheck.gstatic.com"], "outbound": "🎯 全球直连"},
+	 {"domain": ["www.msftconnecttest.com", "connectivitycheck.gstatic.com"], "server": "dns_direct"},
      {"rule_set": "geosite-cn", "server": "dns_direct"},
      {"query_type": ["A", "AAAA"], "server": "fakeip"}
    ],
