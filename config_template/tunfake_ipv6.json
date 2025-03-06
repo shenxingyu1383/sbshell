@@ -54,8 +54,7 @@
       "mtu": 9000,
       "auto_route": true,
       "auto_redirect": true,
-      "strict_route": true,
-      "inet6_route": true
+      "strict_route": true
     },
     {
       "tag": "mixed-in",
@@ -142,6 +141,7 @@
       {"type": "logical", "mode": "or", "rules": [{"port": 53}, {"protocol": "dns"}], "action": "hijack-dns"},
       {"domain": ["dns.msftncsi.com", "www.msftconnecttest.com"], "outbound": "🎯 全球直连"},
       {"ip_cidr": ["131.107.255.255/32", "2001:4860:4860::8888/128"], "outbound": "🎯 全球直连"},
+      {"ip_cidr": ["fc00::/7"], "outbound": "🎯 全球直连"},
       {"protocol": "icmp", "outbound": "🎯 全球直连"},
       {"clash_mode": "Direct", "outbound": "🎯 全球直连"},
       {"clash_mode": "Global", "outbound": "GLOBAL"},
@@ -176,8 +176,7 @@
       {"rule_set": "geosite-onedrive", "outbound": "🐬 OneDrive"},
       {"rule_set": "geosite-microsoft", "outbound": "🪟 Microsoft"},
       {"rule_set": "geosite-geolocation-!cn", "outbound": "🚀 节点选择"},
-      {"rule_set": ["geoip-cn", "geosite-cn"], "outbound": "🎯 全球直连"},
-      {"ip_cidr": ["fc00::/7"], "outbound": "🎯 全球直连"}
+      {"rule_set": ["geoip-cn", "geosite-cn"], "outbound": "🎯 全球直连"}
     ],
     "rule_set": [
       {"tag": "geosite-ai", "type": "remote", "format": "binary", "url": "https://ghproxy.cc/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs", "download_detour": "🎯 全球直连", "update_interval": "7d"},
