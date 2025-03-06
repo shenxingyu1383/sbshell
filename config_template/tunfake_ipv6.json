@@ -59,7 +59,7 @@
     {
       "tag": "mixed-in",
       "type": "mixed",
-      "listen": "[::]",
+      "listen": "::",
       "listen_port": 7890,
       "users": [
         {
