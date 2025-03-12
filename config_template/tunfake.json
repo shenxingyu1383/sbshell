@@ -41,7 +41,7 @@
       {"outbound": "any", "server": "dns_public"},
       {"clash_mode": "Direct", "server": "dns_direct"},
       {"clash_mode": "Global", "server": "dns_proxy"},
-      {"domain": ["dns.msftncsi.com", "www.msftconnecttest.com", "connectivitycheck.gstatic.com"], "server": "dns_direct"},
+      {"domain": ["tob.lenovolife.com", "dns.msftncsi.com", "www.msftconnecttest.com", "connectivitycheck.gstatic.com"], "server": "dns_direct"},
       {"rule_set": "geosite-cn", "server": "dns_direct"},
       {"query_type": ["A", "AAAA"], "server": "fakeip"}
     ],
@@ -158,7 +158,7 @@
         ],
         "outbound": "📡 Synology"
       },
-      {"domain": ["dns.msftncsi.com", "www.msftconnecttest.com"], "outbound": "🎯 全球直连"},
+      {"domain": ["tob.lenovolife.com", "dns.msftncsi.com", "www.msftconnecttest.com"], "outbound": "🎯 全球直连"},
       {"ip_cidr": ["131.107.255.255/32"], "outbound": "🎯 全球直连"},
       {"protocol": "icmp", "outbound": "🎯 全球直连"},
       {"clash_mode": "Direct", "outbound": "🎯 全球直连"},
