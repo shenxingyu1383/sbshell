@@ -158,7 +158,7 @@
         ],
         "outbound": "📡 Synology"
       },
-      {"domain": ["tob.lenovolife.com", "dns.msftncsi.com", "www.msftconnecttest.com"], "outbound": "🎯 全球直连"},
+      {"domain": ["tob.lenovolife.com", "dns.msftncsi.com", "shenxingyu.myds.me.com", "www.msftconnecttest.com"], "outbound": "🎯 全球直连"},
       {"ip_cidr": ["131.107.255.255/32"], "outbound": "🎯 全球直连"},
       {"protocol": "icmp", "outbound": "🎯 全球直连"},
       {"clash_mode": "Direct", "outbound": "🎯 全球直连"},
