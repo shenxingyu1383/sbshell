@@ -145,6 +145,9 @@
     "auto_detect_interface": true,
     "final": "🐠 漏网之鱼",
     "rules": [
+      {"inbound: "any"
+      "port": 25500,
+      "outbound": "🎯 全球直连"},
       {"action": "sniff"},
       {"type": "logical", "mode": "or", "rules": [{"port": 53}, {"protocol": "dns"}], "action": "hijack-dns"},
       {
